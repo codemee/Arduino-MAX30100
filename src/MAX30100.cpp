@@ -144,7 +144,11 @@ void MAX30100::readFifoData()
     uint8_t buffer[MAX30100_FIFO_DEPTH * 4];
     uint8_t toRead;
 
-    toRead = (readRegister(MAX30100_REG_FIFO_WRITE_POINTER) - readRegister(MAX30100_REG_FIFO_READ_POINTER)) & (MAX30100_FIFO_DEPTH - 1);
+    if(readRegister(MAX30100_REG_FIFO_OVERFLOW_COUNTER) == 0)
+        toRead = (readRegister(MAX30100_REG_FIFO_WRITE_POINTER) - readRegister(MAX30100_REG_FIFO_READ_POINTER)) & (MAX30100_FIFO_DEPTH-1);
+    else
+        toRead = 16;
+
 
     if (toRead)
     {
